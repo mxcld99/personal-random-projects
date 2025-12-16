@@ -70,13 +70,11 @@ def get_sum_of_all_same(oom,start_int,end_int):
     return out
 
 total = 0
-max_oom = 0
 for r in ranges:
     print(f'START:{r}')
     start_str, end_str = r.split('-')
     start_int, end_int = (int(start_str),int(end_str))
     start_oom, end_oom = (len(start_str),len(end_str))
-    max_oom = max(max_oom, end_oom)
 
     intermitent_total = 0
     for oom in range(start_oom, end_oom+1):
@@ -105,13 +103,14 @@ for r in ranges:
             # print(f'TO ADD: {to_add}')
 
         # We also need to account for the fact that the case where all digits are the same will have been counted more than once
-        # !!! in it's current state this is still overcounting !!!
         same_sum = get_sum_of_all_same(oom,start_int,end_int)
-        intermitent_total -= same_sum * (num_prime_factors-1)
+        intermitent_total -= same_sum * (num_unique_prime_factors-1)
 
     total += intermitent_total
     print(f'range: {r}, total:{intermitent_total}\n\n')
     # break
 
 print(total)
-print(max_oom)
+
+
+# Trying to do this mathematically, but it's getting ropey and isn't giving me the right answer...
