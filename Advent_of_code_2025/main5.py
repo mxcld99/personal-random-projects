@@ -24,22 +24,6 @@ for line in lines:
 final_ranges = []
 for _range in ranges:
 
-    # Checking for overlap
-    prev_range = None
-    to_break = False
-    for r in final_ranges:
-        if prev_range:
-            if r[0]<=prev_range[1]:
-                print(f'Overlap: {prev_range} and {r}')
-                to_break = True
-                break
-        prev_range = r
-    if to_break:
-        print(final_ranges)
-        print(_range)
-        break
-    ##########################
-
     found_place = False
     for i,final_range in enumerate(final_ranges):
         # check if this range is below the one being checked
@@ -57,19 +41,15 @@ for _range in ranges:
             new_range_top = max(final_range[1],_range[1])
 
             # Looping through above ranges to ensure there isn't more overlap, if there is, combine
-            print('\n\n\nSTART:')
             to_del = 0
             for final_range_above in final_ranges[i+1:]:
-                print(final_range_above[0])
                 if final_range_above[0]>new_range_top:
                     break
                 new_range_top = max(new_range_top,final_range_above[1])
                 to_del+=1
-            print(final_ranges[i])
+
             # Creating new range
             final_ranges[i] = (new_range_bottom,new_range_top)
-            print(final_ranges[i])
-            # print(final_ranges[i+1])
 
             # Deleting unecessary ranges
             for j in range(to_del):
@@ -116,16 +96,5 @@ total_fresh = 0
 for final_range in final_ranges:
     to_add = final_range[1]-final_range[0]+1
     total_fresh += to_add
-    print(final_range,to_add)
 
-print('PART 2 (attempt 1): ',total_fresh)
-
-# Apparently this gives an answer that's too high...
-
-# Checking for overlap
-prev_range = None
-for r in final_ranges:
-    if prev_range:
-        if r[0]<=prev_range[1]:
-            print(f'Overlap: {prev_range} and {r}')
-    prev_range = r
+print('PART 2: ',total_fresh)
