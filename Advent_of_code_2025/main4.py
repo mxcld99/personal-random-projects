@@ -1,5 +1,4 @@
 import os
-from sympy.ntheory import factorint
 
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
