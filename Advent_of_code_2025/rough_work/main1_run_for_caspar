@@ -1,0 +1,85 @@
+import os
+
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
+input = os.path.join(os.getcwd(),'input1.txt')
+input = (r"C:\Users\Max\Downloads\input.txt")
+
+# Reading content of file
+with open(input) as file:
+    rotations = file.readlines()
+
+##################################
+# Part 1
+##################################
+
+# Setting initial values
+password_pt1 = 0
+current_position = 50
+
+# Looping through all actions
+for rotation in rotations:
+
+    # Getting magnitude and direction of rotation
+    direction = -1 if rotation[0] == 'L' else 1
+    mag = int(rotation[1:-1])
+    full_rotation = direction * mag
+
+    # Modular arithmetic to update position
+    current_position = (current_position + full_rotation) % 100
+
+    # If current position is 0, +1
+    password_pt1 += 1 if current_position == 0 else 0
+
+print(f'Part 1: {password_pt1}')
+
+
+
+
+##################################
+# Part 2
+##################################
+
+# Setting initial values
+password_pt2 = 0
+current_position = 50
+
+# Turning rotation line into usable data
+def parse_rotation(rotation_str):
+    # Getting magnitude and direction of rotation
+    direction = -1 if rotation[0] == 'L' else 1
+    mag = int(rotation[1:-1])
+    return direction, mag
+
+# Action to take on a right rotation
+def right_action(mag, current_pos):
+    new_pos_unmod = (current_pos + mag)
+    new_pos = new_pos_unmod % 100
+    score_add = new_pos_unmod // 100
+    return new_pos, score_add
+
+# Action to take on a left rotation
+def left_action(mag, current_pos):
+    
+    # Flipping the dial and flipping back
+    current_pos_flipped = (100 - current_pos)%100
+    new_pos_flipped, score_add = right_action(mag,current_pos_flipped)
+    new_pos = (100 - new_pos_flipped)%100
+    return new_pos, score_add
+
+def update_position(rotation_str, current_pos):
+    direction, mag = parse_rotation(rotation_str)
+    new_pos, score_add = right_action(mag,current_pos) if direction == 1 else left_action(mag,current_pos)
+    return new_pos, score_add
+
+with open('caspar_out.txt','w') as file:
+    # Looping through all actions
+    for rotation in rotations:
+        print(rotation)
+        old_pos = current_position
+        current_position, score_add = update_position(rotation, current_position)
+        password_pt2 += score_add
+        file.write(f'{rotation[:-1]}\t{current_position}\n')
+
+    print(f'Part 2: {password_pt2}')
